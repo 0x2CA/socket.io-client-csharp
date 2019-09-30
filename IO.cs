@@ -441,7 +441,7 @@ namespace SocketIO {
         }
 
         // 建立连接
-        public Task open () {
+        private Task open () {
             return Task.Run (() => {
                 string message = buildNull (((int) IOProtocol.Message).ToString () + ((int) IOProtocol.Open).ToString ()).Result;
                 send (message).Wait ();
