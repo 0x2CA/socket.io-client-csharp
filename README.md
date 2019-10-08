@@ -62,13 +62,12 @@ This is the Socket.IO client for .NET, which is base on ClientWebSocket, provide
 ## Stock Event
 
 ```C#
- public enum IOEvent
-    {
-        OPEN = 0,
-        CLOSE = 1,
-        CONNECT = 2,
-        PING = 3,
-        PONG = 4,
-        ABORTED = 5
+    public enum SocketStockEvent {
+        Open,
+        Close,
+        Connect,
+        Ping,
+        Pong,
+        Abort,
     }
 ```
