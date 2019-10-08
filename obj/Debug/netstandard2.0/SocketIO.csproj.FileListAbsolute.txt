@@ -1,9 +1,0 @@
-E:\VS\SocketIO\bin\Debug\netstandard2.0\SocketIO.deps.json
-E:\VS\SocketIO\bin\Debug\netstandard2.0\SocketIO.dll
-E:\VS\SocketIO\obj\Debug\netstandard2.0\SocketIO.csprojAssemblyReference.cache
-E:\VS\SocketIO\obj\Debug\netstandard2.0\SocketIO.csproj.CoreCompileInputs.cache
-E:\VS\SocketIO\obj\Debug\netstandard2.0\SocketIO.AssemblyInfoInputs.cache
-E:\VS\SocketIO\obj\Debug\netstandard2.0\SocketIO.AssemblyInfo.cs
-E:\VS\SocketIO\bin\Debug\netstandard2.0\SocketIO.pdb
-E:\VS\SocketIO\obj\Debug\netstandard2.0\SocketIO.dll
-E:\VS\SocketIO\obj\Debug\netstandard2.0\SocketIO.pdb
