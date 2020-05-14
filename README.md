@@ -4,31 +4,31 @@ This is the Socket.IO client for .NET, which is base on ClientWebSocket, provide
 ## Usage
 ```C#
     IO socket = new IO (url);
-    socket.on (SocketStockEvent.Close, () => {
+    socket.On (SocketStockEvent.Close, () => {
         Console.WriteLine ("Socket Close");
     });
 
-    socket.on (SocketStockEvent.Ping, () => {
+    socket.On (SocketStockEvent.Ping, () => {
         Console.WriteLine ("Socket Ping");
     });
 
-    socket.on (SocketStockEvent.Pong, () => {
+    socket.On (SocketStockEvent.Pong, () => {
         Console.WriteLine ("Socket Pong");
     });
 
-    socket.on (SocketStockEvent.Abort, () => {
+    socket.On (SocketStockEvent.Abort, () => {
         Console.WriteLine ("Socket Abort");
     });
 
-    socket.on (SocketStockEvent.Open, () => {
+    socket.On (SocketStockEvent.Open, () => {
         Console.WriteLine ("Socket Open");
     });
 
-    socket.on (SocketStockEvent.Connect, () => {
+    socket.On (SocketStockEvent.Connect, () => {
         Console.WriteLine ("Socket Connect");
-        socket.emit ("test", "123456", (result) => {
+        socket.Emit ("test", "123456", (result) => {
             // server can run fun
-            
+
            // Next, you might parse the data in this way.
            var obj = JsonConvert.DeserializeObject<T> (result);
            // Or, read some fields
@@ -40,9 +40,9 @@ This is the Socket.IO client for .NET, which is base on ClientWebSocket, provide
         });
     });
 
-    socket.connect ();
+    socket.Connect ();
 
-    socket.on ("test", (result, callback) => {
+    socket.On ("test", (result, callback) => {
 
         // Next, you might parse the data in this way.
         var obj = JsonConvert.DeserializeObject<T> (result);

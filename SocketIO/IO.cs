@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using System.Net.WebSockets;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using SocketIO.SocketEvent;
 using SocketIO.SocketRequest;
-using SocketIO.SocketRequest.Mode;
 using SocketIO.SocketResponse;
 
 namespace SocketIO {
@@ -19,44 +14,41 @@ namespace SocketIO {
         public IO (Uri url) {
             //协议判断
             if (url.Scheme == "https" || url.Scheme == "http" || url.Scheme == "wss" || url.Scheme == "ws") {
-                _url = url;
+                _Url = url;
             } else {
                 throw new ArgumentException ("Unsupported protocol");
             }
 
-            _eventTarget = new EventTarget ();
+            _EventTarget = new EventTarget ();
         }
 
         public IO (string url) : this (new Uri (url)) { }
 
         // 连接地址
-        private Uri _url;
-
-        //绝对地址
-        private string _absolutePath = "";
+        private Uri _Url;
 
         // 连接附加参数
-        private Dictionary<string, string> _parameters;
+        private Dictionary<string, string> _Parameters;
 
         // 请求封装对象
-        private Request _request;
+        private Request _Request;
 
         // 响应封装对象
-        private Response _response;
+        private Response _Response;
 
         // 事件中心
-        private EventTarget _eventTarget;
+        private EventTarget _EventTarget;
 
         // socket 连接
-        private ClientWebSocket _socket;
+        private ClientWebSocket _Socket;
 
         // 取消令牌
-        private CancellationTokenSource _tokenSource;
+        private CancellationTokenSource _TokenSource;
 
         //连接状态
-        public SocketState getState () {
-            if (_response != null) {
-                return _response.state;
+        public SocketState GetState () {
+            if (_Response != null) {
+                return _Response.State;
 
             } else {
                 return SocketState.Close;
@@ -64,60 +56,60 @@ namespace SocketIO {
         }
 
         // 发送消息注册函数
-        public Task emit (string eventName, object obj, ClientCallbackEventHandler callback) {
+        public Task Emit (string eventName, object obj, ClientCallbackEventHandler callback) {
 
             return Task.Run (() => {
-                if (getState () == SocketState.Connect) {
-                    _request.emit (eventName, obj, callback).Wait ();
+                if (GetState () == SocketState.Connect) {
+                    _Request.Emit (eventName, obj, callback).Wait ();
                 }
-            }, _tokenSource.Token);
+            }, _TokenSource.Token);
 
         }
 
         // 发送消息
-        public Task emit (string eventName, object obj) {
+        public Task Emit (string eventName, object obj) {
             return Task.Run (() => {
-                if (getState () == SocketState.Connect) {
-                    _request.emit (eventName, obj).Wait ();
+                if (GetState () == SocketState.Connect) {
+                    _Request.Emit (eventName, obj).Wait ();
                 }
-            }, _tokenSource.Token);
+            }, _TokenSource.Token);
 
         }
 
-        public void on (string eventName, GeneralEventHandler callback) {
-            _eventTarget.on (eventName, callback);
+        public void On (string eventName, GeneralEventHandler callback) {
+            _EventTarget.On (eventName, callback);
         }
 
-        public void on (SocketStockEvent eventName, StockEventHandler callback) {
-            _eventTarget.on (eventName, callback);
+        public void On (SocketStockEvent eventName, StockEventHandler callback) {
+            _EventTarget.On (eventName, callback);
 
         }
 
-        public void off (string eventName, GeneralEventHandler callback) {
-            _eventTarget.off (eventName, callback);
+        public void Off (string eventName, GeneralEventHandler callback) {
+            _EventTarget.Off (eventName, callback);
         }
 
-        public void off (SocketStockEvent eventName, StockEventHandler callback) {
-            _eventTarget.off (eventName, callback);
+        public void Off (SocketStockEvent eventName, StockEventHandler callback) {
+            _EventTarget.Off (eventName, callback);
         }
 
         // 发起连接
-        public Task connect () {
-            if (_socket == null || (_socket.State == WebSocketState.Closed && _socket.State == WebSocketState.Closed)) {
+        public Task Connect () {
+            if (_Socket == null || (_Socket.State == WebSocketState.Closed && _Socket.State == WebSocketState.Closed)) {
                 // 取消令牌生成
-                _tokenSource = new CancellationTokenSource ();
+                _TokenSource = new CancellationTokenSource ();
 
                 // socket 连接对象
-                _socket = new ClientWebSocket ();
+                _Socket = new ClientWebSocket ();
 
                 //请求对象
-                _request = new Request (_socket, _url, _eventTarget, _tokenSource);
+                _Request = new Request (_Socket, _Url, _EventTarget, _TokenSource);
                 //响应对象
-                _response = new Response (_socket, _url, _eventTarget, _tokenSource, _request);
+                _Response = new Response (_Socket, _Url, _EventTarget, _TokenSource, _Request);
 
-                _request.connect ().Wait ();
+                _Request.Connect ().Wait ();
 
-                _response.listen ();
+                _Response.Listen ();
 
             }
             return Task.CompletedTask;
@@ -125,27 +117,27 @@ namespace SocketIO {
         }
 
         // 关闭连接
-        public Task close () {
-            if (_response.state == SocketState.Connect) {
-                if (_tokenSource != null) {
-                    _tokenSource.Cancel ();
-                    _tokenSource.Dispose ();
+        public Task Close () {
+            if (_Response.State == SocketState.Connect) {
+                if (_TokenSource != null) {
+                    _TokenSource.Cancel ();
+                    _TokenSource.Dispose ();
                 }
 
-                _tokenSource = null;
+                _TokenSource = null;
 
-                if (_response.state != SocketState.Close) {
-                    _response.state = SocketState.Close;
-                    _eventTarget.invoke (SocketStockEvent.Close);
+                if (_Response.State != SocketState.Close) {
+                    _Response.State = SocketState.Close;
+                    _EventTarget.Emit (SocketStockEvent.Close);
                 }
-                if (_socket != null) {
-                    _socket.Abort ();
-                    _socket.Dispose ();
+                if (_Socket != null) {
+                    _Socket.Abort ();
+                    _Socket.Dispose ();
                 }
-                _socket = null;
+                _Socket = null;
 
-                _request = null;
-                _response = null;
+                _Request = null;
+                _Response = null;
             }
             return Task.CompletedTask;
         }

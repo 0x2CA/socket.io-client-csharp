@@ -1,131 +1,129 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace SocketIO.SocketEvent {
     class EventTarget {
 
         // 监听事件
-        private Dictionary<string, GeneralEventHandler> _generalEventHandlers;
+        private Dictionary<string, GeneralEventHandler> _GeneralEventHandlers;
 
         // 监听内置事件
-        private Dictionary<SocketStockEvent, StockEventHandler> _stockEventHandlers;
+        private Dictionary<SocketStockEvent, StockEventHandler> _StockEventHandlers;
 
         //服务器执行事件
-        private Dictionary<int, ClientCallbackEventHandler> _clientCallbackEventHandlers;
+        private Dictionary<int, ClientCallbackEventHandler> _ClientCallbackEventHandlers;
 
         public EventTarget () {
             // 事件字典
-            _generalEventHandlers = new Dictionary<string, GeneralEventHandler> ();
-            _stockEventHandlers = new Dictionary<SocketStockEvent, StockEventHandler> ();
-            _clientCallbackEventHandlers = new Dictionary<int, ClientCallbackEventHandler> ();
+            _GeneralEventHandlers = new Dictionary<string, GeneralEventHandler> ();
+            _StockEventHandlers = new Dictionary<SocketStockEvent, StockEventHandler> ();
+            _ClientCallbackEventHandlers = new Dictionary<int, ClientCallbackEventHandler> ();
         }
 
         // 添加内置事件监听（可重复监听）
-        public void on (SocketStockEvent eventName, StockEventHandler callback) {
-            if (_stockEventHandlers.ContainsKey (eventName)) {
-                StockEventHandler list = _stockEventHandlers[eventName];
+        public void On (SocketStockEvent eventName, StockEventHandler callback) {
+            if (_StockEventHandlers.ContainsKey (eventName)) {
+                StockEventHandler list = _StockEventHandlers[eventName];
                 if (list != null) {
                     list += callback;
-                    _stockEventHandlers.Remove (eventName);
-                    _stockEventHandlers.Add (eventName, list);
+                    _StockEventHandlers.Remove (eventName);
+                    _StockEventHandlers.Add (eventName, list);
                     return;
                 }
             }
-            _stockEventHandlers.Remove (eventName);
-            _stockEventHandlers.Add (eventName, callback);
+            _StockEventHandlers.Remove (eventName);
+            _StockEventHandlers.Add (eventName, callback);
         }
 
         // 添加一般事件监听（可重复监听）
-        public void on (string eventName, GeneralEventHandler callback) {
-            if (_generalEventHandlers.ContainsKey (eventName)) {
-                GeneralEventHandler list = _generalEventHandlers[eventName];
+        public void On (string eventName, GeneralEventHandler callback) {
+            if (_GeneralEventHandlers.ContainsKey (eventName)) {
+                GeneralEventHandler list = _GeneralEventHandlers[eventName];
                 if (list != null) {
                     list += callback;
-                    _generalEventHandlers.Remove (eventName);
-                    _generalEventHandlers.Add (eventName, list);
+                    _GeneralEventHandlers.Remove (eventName);
+                    _GeneralEventHandlers.Add (eventName, list);
                     return;
                 }
 
             }
-            _generalEventHandlers.Remove (eventName);
-            _generalEventHandlers.Add (eventName, callback);
+            _GeneralEventHandlers.Remove (eventName);
+            _GeneralEventHandlers.Add (eventName, callback);
         }
 
         // 远程服务器执行监听
-        public void on (int packetID, ClientCallbackEventHandler callback) {
-            _clientCallbackEventHandlers.Remove (packetID);
-            _clientCallbackEventHandlers.Add (packetID, callback);
+        public void On (int packetID, ClientCallbackEventHandler callback) {
+            _ClientCallbackEventHandlers.Remove (packetID);
+            _ClientCallbackEventHandlers.Add (packetID, callback);
         }
 
         // 移除内置事件监听
-        public void off (SocketStockEvent eventName, StockEventHandler callback) {
-            if (_stockEventHandlers.ContainsKey (eventName)) {
-                StockEventHandler list = _stockEventHandlers[eventName];
+        public void Off (SocketStockEvent eventName, StockEventHandler callback) {
+            if (_StockEventHandlers.ContainsKey (eventName)) {
+                StockEventHandler list = _StockEventHandlers[eventName];
                 if (list != null) {
                     list -= callback;
-                    _stockEventHandlers.Remove (eventName);
-                    _stockEventHandlers.Add (eventName, list);
+                    _StockEventHandlers.Remove (eventName);
+                    _StockEventHandlers.Add (eventName, list);
                     return;
                 }
-                _stockEventHandlers.Remove (eventName);
+                _StockEventHandlers.Remove (eventName);
             }
         }
 
         // 移除一般事件监听
-        public void off (string eventName, GeneralEventHandler callback) {
-            if (_generalEventHandlers.ContainsKey (eventName)) {
-                GeneralEventHandler list = _generalEventHandlers[eventName];
+        public void Off (string eventName, GeneralEventHandler callback) {
+            if (_GeneralEventHandlers.ContainsKey (eventName)) {
+                GeneralEventHandler list = _GeneralEventHandlers[eventName];
                 if (list != null) {
                     list -= callback;
-                    _generalEventHandlers.Remove (eventName);
-                    _generalEventHandlers.Add (eventName, list);
+                    _GeneralEventHandlers.Remove (eventName);
+                    _GeneralEventHandlers.Add (eventName, list);
                     return;
                 }
 
-                _generalEventHandlers.Remove (eventName);
+                _GeneralEventHandlers.Remove (eventName);
 
             }
         }
 
         // 移除客户端运程函数事件监听
-        public void off (int packetID) {
-            _clientCallbackEventHandlers.Remove (packetID);
+        public void Off (int packetID) {
+            _ClientCallbackEventHandlers.Remove (packetID);
         }
 
         // 调用内置事件监听函数
-        public void invoke (SocketStockEvent eventName) {
-            if (_stockEventHandlers.ContainsKey (eventName)) {
-                StockEventHandler list = _stockEventHandlers[eventName];
+        public void Emit (SocketStockEvent eventName) {
+            if (_StockEventHandlers.ContainsKey (eventName)) {
+                StockEventHandler list = _StockEventHandlers[eventName];
                 if (list != null) {
                     list.Invoke ();
                 } else {
-                    _stockEventHandlers.Remove (eventName);
+                    _StockEventHandlers.Remove (eventName);
                 }
             }
         }
 
         // 调用一般事件监听函数
-        public void invoke (string eventName, string result, ServerCallbackEventHandler callback) {
-            if (_generalEventHandlers.ContainsKey (eventName)) {
-                GeneralEventHandler list = _generalEventHandlers[eventName];
+        public void Emit (string eventName, string result, ServerCallbackEventHandler callback) {
+            if (_GeneralEventHandlers.ContainsKey (eventName)) {
+                GeneralEventHandler list = _GeneralEventHandlers[eventName];
                 if (list != null) {
                     list.Invoke (result, callback);
                 } else {
-                    _generalEventHandlers.Remove (eventName);
+                    _GeneralEventHandlers.Remove (eventName);
                 }
             }
         }
 
         // 调用客户端运程函数事件监听
 
-        public void invoke (int packetID, string result) {
-            if (_clientCallbackEventHandlers.ContainsKey (packetID)) {
-                ClientCallbackEventHandler list = _clientCallbackEventHandlers[packetID];
+        public void Emit (int packetID, string result) {
+            if (_ClientCallbackEventHandlers.ContainsKey (packetID)) {
+                ClientCallbackEventHandler list = _ClientCallbackEventHandlers[packetID];
                 if (list != null) {
                     list.Invoke (result);
                 } else {
-                    _clientCallbackEventHandlers.Remove (packetID);
+                    _ClientCallbackEventHandlers.Remove (packetID);
                 }
             }
         }

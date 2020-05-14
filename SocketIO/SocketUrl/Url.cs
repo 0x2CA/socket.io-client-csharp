@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SocketIO.SocketUrl {
     class Url {
-        private static int _eio = 3;
+        private static int _Eio = 3;
 
         // 构建完整地址
         public static Uri Build (Uri url, Dictionary<string, string> parameters) {
@@ -28,7 +28,7 @@ namespace SocketIO.SocketUrl {
             // 地址构建
             builder
                 .Append ("/socket.io/?EIO=")
-                .Append (_eio.ToString ())
+                .Append (_Eio.ToString ())
                 .Append ("&transport=websocket");
 
             //附加参数

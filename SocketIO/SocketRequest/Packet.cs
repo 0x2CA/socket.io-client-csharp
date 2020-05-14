@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SocketIO.SocketRequest.Mode;
+﻿using SocketIO.SocketRequest.Mode;
 
 namespace SocketIO.SocketRequest {
     class Packet {
 
-        public static AMode getMessagePacket (RequestMode mode, string packetType, string absolutePath, int packetId, string eventName, string text) {
+        public static IMode GetMessagePacket (RequestMode mode, string packetType, string absolutePath, int packetId, string eventName, string text) {
             if (mode == RequestMode.Packet) {
                 PacketMode packet = new PacketMode (packetType, absolutePath, packetId, eventName, text);
                 return packet;
@@ -20,7 +17,7 @@ namespace SocketIO.SocketRequest {
 
         }
 
-        public static AMode getNullPacket (RequestMode mode, string packetType, string absolutePath) {
+        public static IMode GetNullPacket (RequestMode mode, string packetType, string absolutePath) {
             if (mode == RequestMode.Packet) {
                 PacketMode packet = new PacketMode (packetType, absolutePath);
                 return packet;
@@ -34,7 +31,7 @@ namespace SocketIO.SocketRequest {
 
         }
 
-        public static AMode getAckPacket (RequestMode mode, string packetType, string absolutePath, int packetId, string text) {
+        public static IMode GetAckPacket (RequestMode mode, string packetType, string absolutePath, int packetId, string text) {
             if (mode == RequestMode.Packet) {
                 PacketMode packet = new PacketMode (packetType, absolutePath, packetId, text);
                 return packet;

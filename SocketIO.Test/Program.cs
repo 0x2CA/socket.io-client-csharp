@@ -4,46 +4,46 @@ namespace SocketIO.Test {
     class Program {
         static void Main (string[] args) {
             IO socket = new IO ("wss://xcx.test.tongchuanggame.com:2020");
-            socket.on (SocketStockEvent.Close, () => {
+            socket.On (SocketStockEvent.Close, () => {
                 Console.WriteLine ("Socket Close");
             });
 
             int count = 0;
-            socket.on (SocketStockEvent.Ping, () => {
+            socket.On(SocketStockEvent.Ping, () => {
                 Console.WriteLine ("Socket Ping");
                 count++;
 
                 if (count > 1) {
-                    socket.close ().Wait ();
+                    socket.Close ().Wait ();
                     count = 0;
                 }
-                socket.connect ().Wait ();
+                socket.Connect().Wait ();
 
             });
 
-            socket.on (SocketStockEvent.Pong, () => {
+            socket.On(SocketStockEvent.Pong, () => {
                 Console.WriteLine ("Socket Pong");
             });
 
-            socket.on (SocketStockEvent.Abort, () => {
+            socket.On(SocketStockEvent.Abort, () => {
                 Console.WriteLine ("Socket Abort");
             });
 
-            socket.on (SocketStockEvent.Open, () => {
+            socket.On(SocketStockEvent.Open, () => {
                 Console.WriteLine ("Socket Open");
             });
 
-            socket.on (SocketStockEvent.Connect, () => {
+            socket.On(SocketStockEvent.Connect, () => {
                 Console.WriteLine ("Socket Connect");
 
-                socket.emit ("test", "12345", (result) => {
+                socket.Emit ("test", "12345", (result) => {
                     Console.WriteLine ("server run:" + result);
                 });
             });
 
-            socket.connect ().Wait ();
+            socket.Connect ().Wait ();
 
-            socket.on ("test", (result, callback) => {
+            socket.On("test", (result, callback) => {
                 Console.WriteLine ("Get:" +
                     result);
                 callback ("hello");

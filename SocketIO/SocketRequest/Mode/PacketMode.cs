@@ -2,14 +2,14 @@ using System.Text;
 using SocketIO.SocketRequest;
 namespace SocketIO.SocketRequest.Mode {
 
-    public class PacketMode : AMode {
+    public class PacketMode : IMode {
 
-        private StringBuilder builder = new StringBuilder ();
+        private StringBuilder _Builder = new StringBuilder ();
         // 数据包
         //<packet type id>[<data>]
         // packetType _namespace packetId ["eventName",text]
         public PacketMode (string packetType, string absolutePath, int packetId, string eventName, string text) {
-            builder
+            _Builder
                 .Append (packetType)
                 .Append (absolutePath)
                 .Append (packetId)
@@ -24,14 +24,14 @@ namespace SocketIO.SocketRequest.Mode {
 
         // 空包
         public PacketMode (string packetType, string absolutePath) {
-            builder
+            _Builder
                 .Append (packetType)
                 .Append (absolutePath);
         }
 
         // 执行运程函数包
         public PacketMode (string packetType, string absolutePath, int packetId, string text) {
-            builder
+            _Builder
                 .Append (packetType)
                 .Append (absolutePath)
                 .Append (packetId)
@@ -41,8 +41,8 @@ namespace SocketIO.SocketRequest.Mode {
         }
 
         //<包类型id>[<data>]
-        public override string getContent () {
-            return builder.ToString ();
+        public override string GetContent () {
+            return _Builder.ToString ();
         }
 
     }
